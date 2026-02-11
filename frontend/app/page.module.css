@@ -1,0 +1,52 @@
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: system-ui, sans-serif;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .inputRow {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .button {
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .todo {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .text {
+    cursor: pointer;
+  }
+  
+  .delete {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
