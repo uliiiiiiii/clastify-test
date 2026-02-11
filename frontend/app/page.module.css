@@ -418,3 +418,51 @@
 .delete:active {
   transform: scale(0.95);
 }
+
+@media (max-width: 768px) {
+  .app {
+    padding: 16px;
+  }
+
+  .page {
+    max-width: 100%;
+  }
+
+  .body {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mainColumn {
+    max-width: 100%;
+  }
+
+  .listsPanel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(80%, 320px);
+    padding: 16px 16px 14px;
+    border-left: none;
+    border-radius: 12px 0 0 12px;
+    background: #020617;
+    box-shadow: -12px 0 24px rgba(0, 0, 0, 0.6);
+    display: block;
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 40;
+  }
+
+  .appLight .listsPanel {
+    background: #ffffff;
+    box-shadow: -12px 0 24px rgba(148, 163, 184, 0.6);
+  }
+
+  .listsPanelOpen {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
