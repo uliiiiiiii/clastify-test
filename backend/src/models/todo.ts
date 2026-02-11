@@ -3,6 +3,7 @@ import mongoose, { Document } from "mongoose";
 export interface ITodo extends Document {
   title: string;
   completed: boolean;
+  list?: mongoose.Types.ObjectId;
 }
 
 const todoSchema = new mongoose.Schema<ITodo>(
@@ -15,6 +16,11 @@ const todoSchema = new mongoose.Schema<ITodo>(
     completed: {
       type: Boolean,
       default: false,
+    },
+    list: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "List",
+      required: false,
     },
   },
   { timestamps: true }

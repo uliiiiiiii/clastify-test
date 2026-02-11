@@ -4,20 +4,31 @@ import Todo from "../models/todo";
 
 
 
-export const getTodos = async (_req: Request, res: Response) => {
-    const todos = await Todo.find().sort({ createdAt: -1 });
-    res.json(todos);
+export const getTodos = async (req: Request, res: Response) => {
+  const { listId } = req.query;
+  const filter: Record<string, unknown> = {};
+
+  if (listId) {
+    filter.list = listId;
+  }
+
+  const todos = await Todo.find(filter).sort({ createdAt: -1 });
+  res.json(todos);
 };
 
 export const createTodo = async (req: Request, res: Response) => {
-    const { title } = req.body;
+  const { title, listId } = req.body;
 
-    if (!title) {
-        return res.status(400).json({ message: "Title is required" });
-    }
+  if (!title) {
+    return res.status(400).json({ message: "Title is required" });
+  }
 
-    const todo = await Todo.create({ title });
-    res.status(201).json(todo);
+  if (!listId) {
+    return res.status(400).json({ message: "listId is required" });
+  }
+
+  const todo = await Todo.create({ title, list: listId });
+  res.status(201).json(todo);
 };
 
 export const toggleTodo = async (req: Request, res: Response) => {
