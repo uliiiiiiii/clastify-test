@@ -67,7 +67,10 @@ Minimal full‑stack todo app with multiple lists, dark/light theme, and a Docke
    cd clastify-test
    ```
 
-2. Start all services:
+2. Copy `.env.example` in backend/frontend folders and paste your envs (for the local development `localhost` will do instead of public IP).
+  
+  
+3. Start all services:
 
    ```bash
    docker compose up --build
@@ -78,13 +81,13 @@ Minimal full‑stack todo app with multiple lists, dark/light theme, and a Docke
    - Build and start the backend on container name `backend`, port `5000` (exposed as `localhost:5000`).
    - Build and start the frontend on container name `client`, port `3000` (exposed as `localhost:3000`).
 
-3. Open the app in your browser:
+6. Open the app in your browser:
 
    ```text
    http://localhost:3000
    ```
 
-4. Basic health checks (optional):
+7. Basic health checks (optional):
 
    - Backend health:
 
