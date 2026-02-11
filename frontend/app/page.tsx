@@ -2,27 +2,82 @@
 
 import { useEffect, useState } from "react";
 import { Todo } from "@/types/todo";
+import { TodoList } from "@/types/list";
 import styles from "./page.module.css"; // import module
+import { AppHeader } from "./components/AppHeader";
+import { TodoMain } from "./components/TodoMain";
+import { ListsPanel } from "./components/ListsPanel";
 
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [lists, setLists] = useState<TodoList[]>([]);
+  const [selectedListId, setSelectedListId] = useState<string | null>(null);
+  const [isListsOpen, setIsListsOpen] = useState(false);
+  const [newListName, setNewListName] = useState("");
   const [title, setTitle] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">("dark");
-  const API = `${process.env.NEXT_PUBLIC_API_URL}/api/todos`;
+
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+  const TODOS_API = `${API_BASE}/api/todos`;
+  const LISTS_API = `${API_BASE}/api/lists`;
 
   useEffect(() => {
-    fetch(API)
+    async function bootstrap() {
+      try {
+        const res = await fetch(LISTS_API);
+        const data: TodoList[] = await res.json();
+
+        if (data.length === 0) {
+          const created = await createListOnServer("My first list");
+          setLists([created]);
+          setSelectedListId(created._id);
+        } else {
+          setLists(data);
+          setSelectedListId(data[0]._id);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    bootstrap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!selectedListId) return;
+
+    fetch(`${TODOS_API}?listId=${selectedListId}`)
       .then(res => res.json())
       .then(setTodos)
       .catch(console.error);
-  }, []);
+  }, [TODOS_API, selectedListId]);
 
-  async function addTodo() {
-    if (!title.trim()) return;
-    const res = await fetch(API, {
+  async function createListOnServer(name: string): Promise<TodoList> {
+    const res = await fetch(LISTS_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title }),
+      body: JSON.stringify({ name }),
+    });
+    return res.json();
+  }
+
+  async function addList() {
+    if (!newListName.trim()) return;
+
+    const list = await createListOnServer(newListName.trim());
+    setLists(prev => [...prev, list]);
+    setSelectedListId(list._id);
+    setNewListName("");
+    setIsListsOpen(false);
+  }
+
+  async function addTodo() {
+    if (!title.trim() || !selectedListId) return;
+    const res = await fetch(TODOS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, listId: selectedListId }),
     });
     const todo = await res.json();
     setTodos(prev => [...prev, todo]);
@@ -30,15 +85,41 @@ export default function Home() {
   }
 
   async function toggleTodo(id: string) {
-    const res = await fetch(`${API}/${id}`, { method: "PATCH" });
+    const res = await fetch(`${TODOS_API}/${id}`, { method: "PATCH" });
     const updated = await res.json();
     setTodos(prev => prev.map(t => (t._id === id ? updated : t)));
   }
 
   async function deleteTodo(id: string) {
-    await fetch(`${API}/${id}`, { method: "DELETE" });
+    await fetch(`${TODOS_API}/${id}`, { method: "DELETE" });
     setTodos(prev => prev.filter(t => t._id !== id));
   }
+
+  async function deleteList(id: string) {
+    if (lists.length <= 1) {
+      return;
+    }
+
+    await fetch(`${LISTS_API}/${id}`, { method: "DELETE" });
+
+    setLists(prev => {
+      const next = prev.filter(list => list._id !== id);
+
+      if (!next.length) {
+        setSelectedListId(null);
+        setTodos([]);
+        return next;
+      }
+
+      if (id === selectedListId) {
+        setSelectedListId(next[0]._id);
+      }
+
+      return next;
+    });
+  }
+
+  const currentList = lists.find(list => list._id === selectedListId);
 
   return (
     <main
@@ -46,60 +127,40 @@ export default function Home() {
         theme === "dark" ? styles.appDark : styles.appLight
       }`}
     >
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>Neon Todo</h1>
-          <button
-            type="button"
-            aria-label="Toggle light and dark mode"
-            className={`${styles.themeToggle} ${
-              theme === "dark" ? styles.themeToggleDark : styles.themeToggleLight
-            }`}
-            onClick={() =>
-              setTheme(current => (current === "dark" ? "light" : "dark"))
-            }
-          >
-            <span className={styles.themeIcon}>
-              {theme === "dark" ? "🌙" : "☀️"}
-            </span>
-          </button>
-        </header>
+      <div className={styles.page}>
+        <AppHeader
+          theme={theme}
+          onToggleTheme={() =>
+            setTheme(current => (current === "dark" ? "light" : "dark"))
+          }
+          onToggleLists={() => setIsListsOpen(open => !open)}
+        />
 
-        <div className={styles.inputRow}>
-          <input
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="Add a new task..."
-            className={styles.input}
+        <div className={styles.body}>
+          <TodoMain
+            currentListName={currentList?.name}
+            title={title}
+            onTitleChange={setTitle}
+            onAddTodo={addTodo}
+            todos={todos}
+            onToggleTodo={toggleTodo}
+            onDeleteTodo={deleteTodo}
           />
-          <button onClick={addTodo} className={styles.button}>
-            Add
-          </button>
+
+          <ListsPanel
+            lists={lists}
+            selectedListId={selectedListId}
+            isOpen={isListsOpen}
+            newListName={newListName}
+            onChangeNewListName={setNewListName}
+            onSelectList={id => {
+              setSelectedListId(id);
+              setIsListsOpen(false);
+            }}
+            onAddList={addList}
+            onDeleteList={deleteList}
+          />
         </div>
-
-        <ul className={styles.list}>
-          {todos.map(todo => (
-            <li
-              key={todo._id}
-              className={`${styles.todo} ${
-                todo.completed ? styles.todoCompleted : ""
-              }`}
-              onClick={() => toggleTodo(todo._id)}
-            >
-              <span className={styles.text}>{todo.title}</span>
-
-              <button
-                onClick={e => {
-                  e.stopPropagation();
-                  deleteTodo(todo._id);
-                }}
-                className={styles.delete}
-              >
-                ✕
-              </button>
-            </li>
-          ))}
-        </ul>
       </div>
     </main>
   );

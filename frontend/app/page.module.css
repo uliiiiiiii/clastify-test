@@ -1,9 +1,9 @@
 .app {
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 32px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     sans-serif;
   transition: background 0.4s ease, color 0.4s ease;
@@ -19,27 +19,10 @@
   color: #111827;
 }
 
-.container {
+.page {
   width: 100%;
-  max-width: 520px;
-  padding: 24px 22px 20px;
-  border-radius: 24px;
-  background: #050508;
-  box-shadow: 0 0 32px rgba(139, 92, 246, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  backdrop-filter: blur(14px);
-  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease,
-    transform 0.2s ease;
-}
-
-.appLight .container {
-  background: #ffffff;
-  box-shadow: 0 0 28px rgba(252, 211, 77, 0.45);
-  border-color: rgba(209, 213, 219, 0.9);
-}
-
-.container:hover {
-  transform: translateY(-2px);
+  max-width: 1120px;
+  margin: 0 auto;
 }
 
 .header {
@@ -47,19 +30,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.7);
+}
+
+.headerControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .title {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-shadow: 0 0 14px rgba(139, 92, 246, 0.9);
-}
-
-.appLight .title {
-  text-shadow: 0 0 12px rgba(252, 211, 77, 0.9);
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .themeToggle {
@@ -107,6 +90,48 @@
   display: flex;
   gap: 10px;
   margin-bottom: 16px;
+}
+
+.body {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  padding-top: 20px;
+}
+
+.mainColumn {
+  flex: 1;
+  max-width: 680px;
+}
+
+.listHeading {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.listsToggleButton {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.1s ease, color 0.15s ease;
+}
+
+.listsToggleButton:hover {
+  background: rgba(17, 24, 39, 0.8);
+  transform: translateY(-1px);
+}
+
+.appLight .listsToggleButton:hover {
+  background: #f3f4f6;
 }
 
 .input {
@@ -172,6 +197,142 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.listsPanel {
+  width: 260px;
+  padding-left: 24px;
+  border-left: 1px solid rgba(55, 65, 81, 0.7);
+  display: none;
+}
+
+.appLight .listsPanel {
+  border-color: rgba(209, 213, 219, 1);
+}
+
+.listsPanelOpen {
+  display: block;
+}
+
+.listsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.listsTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lists {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.listItem {
+  width: 100%;
+  text-align: left;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease, transform 0.1s ease;
+}
+
+.listItem:hover {
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-1px);
+}
+
+.appLight .listItem:hover {
+  background: #f3f4f6;
+}
+
+.listItemActive {
+  border-color: rgba(139, 92, 246, 0.9);
+  background: rgba(17, 24, 39, 0.95);
+}
+
+.appLight .listItemActive {
+  background: #fefce8;
+  border-color: rgba(252, 211, 77, 0.9);
+}
+
+.listDelete {
+  border: none;
+  background: transparent;
+  color: rgba(148, 163, 184, 0.9);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.listDelete:hover {
+  background: rgba(31, 41, 55, 0.9);
+  color: #f9fafb;
+  transform: translateY(-1px);
+}
+
+.appLight .listDelete:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.newListRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.newListInput {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  background: #020617;
+  color: #e5e7eb;
+  outline: none;
+}
+
+.newListInput::placeholder {
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.appLight .newListInput {
+  background: #f9fafb;
+  color: #111827;
+  border-color: rgba(209, 213, 219, 1);
+}
+
+.smallButton {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #8b5cf6, #f97316);
+  color: #f9fafb;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .todo {
