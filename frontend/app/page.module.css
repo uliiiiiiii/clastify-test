@@ -171,6 +171,7 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.08em;
+  width: 40px;
   text-transform: uppercase;
   cursor: pointer;
   background: linear-gradient(135deg, #8b5cf6, #f97316);
@@ -277,6 +278,7 @@
 }
 
 .listDelete {
+  width: 36px;
   border: none;
   background: transparent;
   color: rgba(148, 163, 184, 0.9);
@@ -326,6 +328,7 @@
 }
 
 .smallButton {
+  width: 36px;
   padding: 4px 8px;
   border-radius: 999px;
   border: none;
@@ -381,7 +384,7 @@
 
 .appLight .todoCompleted .text {
   color: #9ca3af;
-  text-decoration-color: rgba(209, 213, 219, 1);
+  text-decoration-color: #898b8e;
 }
 
 .text {
