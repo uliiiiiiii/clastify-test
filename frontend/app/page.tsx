@@ -41,7 +41,6 @@ export default function Home() {
     }
 
     bootstrap();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

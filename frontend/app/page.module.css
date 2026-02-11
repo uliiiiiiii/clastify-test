@@ -2,7 +2,6 @@
   min-height: 100vh;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   padding: 24px 32px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     sans-serif;
@@ -95,6 +94,7 @@
 .body {
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 32px;
   padding-top: 20px;
 }
