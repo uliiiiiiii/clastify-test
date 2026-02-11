@@ -7,6 +7,7 @@ import styles from "./page.module.css"; // import module
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState("");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const API = `${process.env.NEXT_PUBLIC_API_URL}/api/todos`;
 
   useEffect(() => {
@@ -40,43 +41,66 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.container}>
-      <h1 className={styles.title}>Todo App</h1>
-
-      <div className={styles.inputRow}>
-        <input
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          placeholder="New task..."
-          className={styles.input}
-        />
-        <button onClick={addTodo} className={styles.button}>
-          Add
-        </button>
-      </div>
-
-      <ul className={styles.list}>
-        {todos.map(todo => (
-          <li key={todo._id} className={styles.todo}>
-            <span
-              onClick={() => toggleTodo(todo._id)}
-              className={styles.text}
-              style={{
-                textDecoration: todo.completed ? "line-through" : "none",
-              }}
-            >
-              {todo.title}
+    <main
+      className={`${styles.app} ${
+        theme === "dark" ? styles.appDark : styles.appLight
+      }`}
+    >
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>Neon Todo</h1>
+          <button
+            type="button"
+            aria-label="Toggle light and dark mode"
+            className={`${styles.themeToggle} ${
+              theme === "dark" ? styles.themeToggleDark : styles.themeToggleLight
+            }`}
+            onClick={() =>
+              setTheme(current => (current === "dark" ? "light" : "dark"))
+            }
+          >
+            <span className={styles.themeIcon}>
+              {theme === "dark" ? "🌙" : "☀️"}
             </span>
+          </button>
+        </header>
 
-            <button
-              onClick={() => deleteTodo(todo._id)}
-              className={styles.delete}
+        <div className={styles.inputRow}>
+          <input
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder="Add a new task..."
+            className={styles.input}
+          />
+          <button onClick={addTodo} className={styles.button}>
+            Add
+          </button>
+        </div>
+
+        <ul className={styles.list}>
+          {todos.map(todo => (
+            <li
+              key={todo._id}
+              className={`${styles.todo} ${
+                todo.completed ? styles.todoCompleted : ""
+              }`}
+              onClick={() => toggleTodo(todo._id)}
             >
-              ✕
-            </button>
-          </li>
-        ))}
-      </ul>
+              <span className={styles.text}>{todo.title}</span>
+
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  deleteTodo(todo._id);
+                }}
+                className={styles.delete}
+              >
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </main>
   );
 }
