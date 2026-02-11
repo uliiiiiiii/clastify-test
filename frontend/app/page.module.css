@@ -171,7 +171,6 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  width: 40px;
   text-transform: uppercase;
   cursor: pointer;
   background: linear-gradient(135deg, #8b5cf6, #f97316);
@@ -398,6 +397,7 @@
   border: none;
   background: transparent;
   cursor: pointer;
+  width: 40px;
   font-size: 16px;
   color: rgba(248, 113, 113, 0.9);
   padding: 4px;
